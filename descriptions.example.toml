@@ -1,0 +1,19 @@
+# hyprmaps descriptions
+#
+# Copy to ~/.config/hyprmaps/descriptions.toml. One table per app id
+# (`hyprmaps --list`), one line per key. The key must be written exactly
+# as hyprmaps shows it (`hyprmaps --dump --only APP` prints them).
+# To describe a key only in one mode, prefix it with the mode: "[insert] <C-s>".
+#
+# A description here wins over anything found in the config files.
+
+[hyprland]
+"Super + A" = "Open the terminal (kitty)"
+"Super + Shift + M" = "Log out of Hyprland"
+
+[kitty]
+"Ctrl + ," = "Edit kitty.conf in a new window"
+
+[nvim]
+"<leader>e" = "Show the diagnostic under the cursor"
+"[insert] <C-s>" = "Save and go back to normal mode"

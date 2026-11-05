@@ -1,0 +1,117 @@
+# hyprmaps configuration
+#
+# Copy this file to ~/.config/hyprmaps/config.toml and edit it.
+# Every setting is optional: delete what you do not need, the defaults are
+# the values shown here. hyprmaps only reads this file, it never writes it.
+
+# ----------------------------------------------------------------- start ---
+
+# Ask at start-up which groups to include (window manager, terminal, ...).
+# false = skip the question and use `categories` below.
+ask = true
+
+# Groups that are ticked when the question opens (or used directly when
+# ask = false). Leave empty for "every group that has an installed app".
+# Ids: wm, terminal, shell, alias, multiplexer, editor, browser, files, media, launcher, other
+categories = []
+
+# Show each app's built-in default shortcuts (kitty defaults, tmux defaults,
+# ...). false = they start hidden in rofi (Alt+d shows them) and --dump
+# leaves them out. To drop them for one app only: [apps.<id>] defaults = false
+defaults = true
+
+# Keep the keymaps between runs, so hyprmaps opens about twice as fast.
+# An app is read again only when one of its files, folders, variables or
+# live answers (hyprctl binds, ...) changed, so edits show up on the next run.
+# This is the one exception to "hyprmaps writes no file": it writes
+# ~/.cache/hyprmaps/ (keymaps.json and compiled code). Delete that folder to
+# undo it. The first two runs after turning it on are slower.
+cache = false
+
+# ------------------------------------------------------------ appearance ---
+# Empty values ("") keep what your normal rofi theme does.
+# Colours accept anything rofi does: #rrggbb, #rrggbbaa, rgba(30,30,46,0.9).
+
+[appearance]
+theme = ""                 # a .rasi file used only for this window, e.g. "~/.config/rofi/keymaps.rasi"
+width = "60%"              # window width: "60%", "900px", "80em"
+lines = 15                 # visible rows (0 = theme's)
+location = "center"        # center, north, south, east, west, north-east, ...
+font = ""                  # whole window, e.g. "JetBrainsMono Nerd Font 11"
+background = ""            # window background
+foreground = ""            # text colour
+accent = ""                # border, prompt and the current app in the app bar
+selected_background = ""   # highlighted row
+selected_foreground = ""
+border_width = ""          # e.g. "2px"
+border_radius = ""         # e.g. "12px"
+padding = ""               # e.g. "12px"
+force_layout = true        # always show the message box (app bar, notes); set false if it breaks your theme
+icons = true               # app icons in the app list
+
+# Rows
+markup = true              # bold keys and dim actions; false = plain text
+key_font = "monospace"     # font family of the key column (a monospace font keeps columns aligned)
+key_color = ""             # colour of the keys, e.g. "#f9e2af"
+max_key_width = 26         # key column width cap, in characters
+show_action = true         # show the raw action next to the description
+show_section = true        # show the mode / table, e.g. [insert], [copy-mode-vi]
+default_tag = "default"    # tag shown on built-in defaults; "" = no tag
+user_first = true          # your own binds first, app defaults after
+
+# ------------------------------------------------------------------ keys ---
+# Keys inside the rofi window, in rofi's syntax (comma = alternatives).
+# A rofi binding that already uses one of these keys gives it up for this
+# window only; your rofi config is not touched.
+
+[keys]
+next_app = "Shift+Right,Control+Tab"
+prev_app = "Shift+Left,Control+ISO_Left_Tab"
+toggle_defaults = "Alt+d"
+
+# ------------------------------------------------------------------ apps ---
+# Per-app settings, by app id (`hyprmaps --list` shows the ids).
+#
+#   enabled  = false        never read nor show this app (the only lasting way to
+#                           drop it: unticking it in rofi lasts for one run)
+#   paths    = ["..."]      read these files/folders instead of the default location
+#   defaults = false        hide this app's built-in defaults
+#   live     = true         ask the app itself (Neovim, WezTerm). This loads your
+#                           config inside the app, so plugins run. Neovim saves nothing
+#                           (no shada, no swap, state/cache go to a temp dir), but a
+#                           plugin that writes (a plugin manager installing) still can.
+
+# [apps.kitty]
+# paths = ["~/dotfiles/kitty/kitty.conf"]
+
+# [apps.nvim]
+# live = true
+
+# [apps.thunar]
+# enabled = false
+
+# ---------------------------------------------------------------- custom ---
+# Apps hyprmaps does not know. Each [[custom]] block adds one app.
+#
+#   name      shown in rofi (required)
+#   paths     files to read (required); ~, $VARS and globs work
+#   category  one of the group ids above (default "other")
+#   format    "auto"   = guess (bind/map lines, KEY = ACTION, JSON/TOML objects)
+#             "regex"  = use `pattern` below
+#             an app id, e.g. "kitty" or "tmux", to read the file like that app
+#   pattern   with format = "regex": named groups (?P<key>...) (required),
+#             (?P<action>...), (?P<desc>...), (?P<section>...)
+#   comment   comment prefix for "auto" (default "#"), used for descriptions
+#   icon      icon name for the app list
+
+# [[custom]]
+# name = "kew"
+# category = "media"
+# paths = ["~/.config/kew/kewrc"]
+# format = "regex"
+# pattern = '^bind\s*=\s*(?P<key>[^,]+),\s*(?P<action>.+)$'
+
+# [[custom]]
+# name = "My app"
+# paths = ["~/.config/myapp/keys.conf"]
+# format = "auto"

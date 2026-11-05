@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+"""hyprmaps launcher. Symlink it into your PATH, e.g. ~/.local/bin."""
+
+import os
+import stat
+import sys
+
+if sys.version_info < (3, 11):
+    sys.exit("hyprmaps needs Python 3.11 or newer (for tomllib)")
+
+sys.dont_write_bytecode = True  # read-only tool: not even a __pycache__ next to it
+# Only `cache = true` creates this dir (hyprmaps/cache.py) and writes bytecode in it; it is only read here.
+# It holds the stdlib's bytecode too, as a prefix replaces every __pycache__, so it is not used before.
+_cache = os.path.join(os.environ.get("XDG_CACHE_HOME") or os.path.expanduser("~/.cache"), "hyprmaps")
+try:  # only a dir of the user that no one else can write in: bytecode in it is run
+    _st = os.stat(_cache)
+    if stat.S_ISDIR(_st.st_mode) and _st.st_uid == os.getuid() and not _st.st_mode & 0o022:
+        sys.pycache_prefix = os.path.join(_cache, "pycache")
+except OSError:
+    pass
+
+# The repo root (parent of bin/) holds the package; realpath follows a symlink in ~/.local/bin.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+from hyprmaps.cli import main  # noqa: E402
+
+sys.exit(main())
